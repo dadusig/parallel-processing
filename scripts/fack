@@ -1,0 +1,119 @@
+#!/bin/bash
+
+file="lif1d.c"
+opt="-O3"
+path="./"
+allRes=" "
+blas=" "
+size="full"
+
+while [[ $# -ge 1 ]]; do
+
+	if [[ "$1" == "-f"  ]]; then
+		file=$2
+		shift
+	elif [[ "$1" == "-O0" ]]; then
+		opt=$1
+	elif [[ "$1" == "-ALL" ]]; then
+		allRes="-DALL_RESULTS"
+	elif [[ "$1" == "-lblas" ]]; then
+		blas="-lblas"
+	elif [[ "$1" == "--small" ]]; then
+		size="small"
+	elif [[ "$1" == "--big" ]]; then
+		size="big"
+	elif [[ "$1" == "-p" ]]; then
+		path=$2
+		shift
+	fi
+
+	shift
+done
+
+echo file = $file
+echo optimization = $opt
+echo path = $path
+
+if [[ "$size" == "small" ]]; then
+	declare -a n=("200" "400" "600" "800" "1000")
+	declare -a r=("60" "120" "200" "250" "350")
+elif [[ "$size" == "big" ]]; then
+	declare -a n=("1000" "2000" "3000" "4000" "5000")
+	declare -a r=("350" "700" "1000" "1300" "1600")
+else
+	declare -a n=("200" "400" "600" "800" "1000" "2000" "3000" "4000" "5000")
+	declare -a r=("60" "120" "200" "250" "350" "700" "1000" "1300" "1600")
+fi
+
+
+let lenN=${#n[@]}
+let lenR=${#r[@]}
+
+if [[ lenN -ne lenR ]]; then
+	echo lenN isnt equal with lenR
+	exit
+fi
+
+cd $path
+
+work=`pwd`
+
+echo "i am in: $work"
+
+compile="gcc $opt -Wall -Wextra $file $blas"
+
+echo
+echo $compile
+
+eval $compile
+
+mkdir -p results
+
+SECONDS=0
+
+for (( i = 0; i < $lenN; i++ )); do
+	outfile="${n[$i]}.txt"
+	if [[ "$allRes" == "-DALL_RESULTS" ]]; then
+		outfile="${n[$i]}all.txt"
+	fi
+	execute="./a.out --n ${n[$i]} --r ${r[$i]} $allRes > .$outfile"
+	echo $execute
+	eval $execute
+
+	mv ./.$outfile ./results/$outfile
+	mv ./spacetime.out ./results/${n[$i]}_spacetime.out
+	mv ./omega.out ./results/${n[$i]}_omega.out
+
+
+done
+
+echo "Time elapsed: $SECONDS sec"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ## now loop through the above array
+# for i in "${arr[@]}"
+# do
+#    echo "$i"
+#    # or do whatever with individual element of the array
+# done
+#
+# # You can access them using echo "${arr[0]}", "${arr[1]}" also
