@@ -1,0 +1,69 @@
+--- ./1b/lif1d.c
++++ ./1c/lif1d.c
+@@ -3,6 +3,7 @@
+ #include <getopt.h>
+ #include <stdlib.h>
+ #include <sys/time.h>
++#include <cblas.h>
+ 
+ #define MIN_NUM_OF_NEURONS	(1L)
+ #define DEF_NUM_OF_NEURONS	(1000L)
+@@ -36,7 +37,7 @@
+ {
+ 	FILE		*output1, *output2;
+ 	long		n, r;
+-	long		i, j, var;
++	long		i, j;
+ 	long		it;
+ 	double		divide;
+ 	double		dt;
+@@ -50,7 +51,7 @@
+ 	double		s_min;
+ 	double		s_max;
+ 	double		*u, *uplus, *sigma, *omega, *omega1, *temp, *sigma_vector;
+-	double		sum, sum1;
++	double		sum;
+ 	double		time;
+ 	struct timeval	global_start, global_end, IO_start, IO_end;
+ 	double		global_usec, IO_usec = 0.0;
+@@ -317,24 +318,26 @@
+  		}
+  	}
+ 
++	double *mysum1;
++	mysum1 = (double *)calloc(n, sizeof(double));
++
++
+ 	gettimeofday(&global_start, NULL);
+ 	for (it = 0; it < itime; it++) {
+ 		/*
+ 		 * Iteration over elements.
+ 		 */
++		 cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, 1, sigma, n, u, 1, 0, mysum1, 1);
++
+ 		for (i = 0; i < n; i++) {
+ 			uplus[i] = u[i] + dt * (mu - u[i]);
+ 			sum = 0.0;
+-			sum1 = 0.0;
++
+ 			/*
+ 			 * Iteration over neighbouring neurons.
+ 			 */
+-			var = i*n;
+-			for (j = 0; j < n; j++) {
+-				sum1 += sigma[var + j] * u[j];
+-			}
+ 
+-			sum = sum1 + u[i]*sigma_vector[i];
++			sum = mysum1[i] + u[i]*sigma_vector[i];
+ 
+ 			uplus[i] += var2 * sum;
+ 		}
+@@ -349,6 +352,7 @@
+ 		 u = temp;
+ 
+ 		for (i = 0; i < n; i++) {
++			//u[i] = uplus[i];
+ 			if (u[i] > uth) {
+ 				u[i] = 0.0;
+ 				/*

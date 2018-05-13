@@ -1,0 +1,61 @@
+--- ./1a/lif1d.c	
++++ ./1b/lif1d.c	
+@@ -36,7 +36,7 @@
+ {
+ 	FILE		*output1, *output2;
+ 	long		n, r;
+-	long		i, j;
++	long		i, j, var;
+ 	long		it;
+ 	double		divide;
+ 	double		dt;
+@@ -49,8 +49,8 @@
+ 	double		mu;
+ 	double		s_min;
+ 	double		s_max;
+-	double		*u, *uplus, *sigma, *omega, *omega1, *temp;
+-	double		sum;
++	double		*u, *uplus, *sigma, *omega, *omega1, *temp, *sigma_vector;
++	double		sum, sum1;
+ 	double		time;
+ 	struct timeval	global_start, global_end, IO_start, IO_end;
+ 	double		global_usec, IO_usec = 0.0;
+@@ -306,6 +306,17 @@
+ 	/*
+ 	 * Temporal iteration.
+ 	 */
++	 //CEID 1b
++	 double var2 = dt / divide;
++
++	 sigma_vector = (double *)calloc(n, sizeof(double));
++	 for (i = 0; i < n; i++) {
++		 sigma_vector[i] = 0.0;
++ 		for (j = 0; j < n; j++) {
++ 			sigma_vector[i] += (-sigma[i*n + j]);
++ 		}
++ 	}
++
+ 	gettimeofday(&global_start, NULL);
+ 	for (it = 0; it < itime; it++) {
+ 		/*
+@@ -314,13 +325,18 @@
+ 		for (i = 0; i < n; i++) {
+ 			uplus[i] = u[i] + dt * (mu - u[i]);
+ 			sum = 0.0;
++			sum1 = 0.0;
+ 			/*
+ 			 * Iteration over neighbouring neurons.
+ 			 */
++			var = i*n;
+ 			for (j = 0; j < n; j++) {
+-				sum += sigma[i * n + j] * (u[j] - u[i]);
++				sum1 += sigma[var + j] * u[j];
+ 			}
+-			uplus[i] += dt * sum / divide;
++
++			sum = sum1 + u[i]*sigma_vector[i];
++
++			uplus[i] += var2 * sum;
+ 		}
+ 
+ 		/*
