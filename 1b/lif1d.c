@@ -349,7 +349,6 @@ int main(int argc, char *argv[])
 		 u = temp;
 
 		for (i = 0; i < n; i++) {
-			//u[i] = uplus[i];
 			if (u[i] > uth) {
 				u[i] = 0.0;
 				/*
