@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
 			 * Iteration over neighbouring neurons.
 			 */
 			var = i*n;
-			#pragma omp parallel for reduction(+:sum1) num_threads(8)
+			#pragma omp parallel for reduction(+:sum1)
 			for (j = 0; j < n; j++) {
 				sum1 += sigma[var + j] * u[j];
 			}
