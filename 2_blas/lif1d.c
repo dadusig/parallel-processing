@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <cblas.h>
+#include <omp.h>
 
 #define MIN_NUM_OF_NEURONS	(1L)
 #define DEF_NUM_OF_NEURONS	(1000L)
@@ -321,35 +322,45 @@ int main(int argc, char *argv[])
 	double *mysum1;
 	mysum1 = (double *)calloc(n, sizeof(double));
 
-
 	gettimeofday(&global_start, NULL);
 	for (it = 0; it < itime; it++) {
 		/*
 		 * Iteration over elements.
 		 */
-
-		 //?gemv(                       'T',      M, N, a,  A,    M,  X,  1, b,  Y,  1)
-
-		#pragma omp parallel default(none) private(i, sum) \
- 		shared(uplus, u, dt, mu, var2, n, sigma_vector,mysum1, sigma) num_threads(8)
+		#pragma omp parallel private(i, sum) num_threads(8)
 		{
+			// int start, end, numOfThreads, numOfElements, id;
+            //
+			int numOfThreads = omp_get_num_threads();
+			int numOfElements = n / numOfThreads;
+			int id = omp_get_thread_num();
 
-			// #pragma omp single
-			// cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, 1, sigma, n, u, 1, 0, mysum1, 1);
+			double* sigma_new = sigma + id * numOfElements * n;
+			//double* u_new = u + id * numOfElements;
+			double* mysum1_new = mysum1 + id * numOfElements;
 
-			#pragma omp for schedule(runtime)
+			int M;
+
+			if (id != numOfThreads - 1) {
+				M = n/numOfThreads;
+			}
+			else
+			{
+				M = n/numOfThreads + n%numOfThreads;
+			}
+
+
+			cblas_dgemv(CblasRowMajor, CblasNoTrans, M, n, 1, sigma_new, n, u, 1, 0, mysum1_new, 1);
+			//?gemv(                       'T',      M, N, a,   A,   M,  X, 1, b,  Y,  1)
+
+
+			#pragma omp for
 			for (i = 0; i < n; i++) {
 				uplus[i] = u[i] + dt * (mu - u[i]);
 				sum = 0.0;
-				//sum1 = 0.0;
 				/*
 				 * Iteration over neighbouring neurons.
 				 */
-				// var = i*n;
-				// for (j = 0; j < n; j++) {
-				// 	sum1 += sigma[var + j] * u[j];
-				// }
-
 
 				sum = mysum1[i] + u[i]*sigma_vector[i];
 
@@ -367,7 +378,6 @@ int main(int argc, char *argv[])
 		 u = temp;
 
 		for (i = 0; i < n; i++) {
-			//u[i] = uplus[i];
 			if (u[i] > uth) {
 				u[i] = 0.0;
 				/*
