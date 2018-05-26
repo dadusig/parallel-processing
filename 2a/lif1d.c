@@ -318,42 +318,42 @@ int main(int argc, char *argv[])
  	}
 
 	gettimeofday(&global_start, NULL);
-	#pragma omp parallel for private(it, i, j) ordered
-	for (it = 0; it < itime; it++) {
-		/*
-		 * Iteration over elements.
-		 */
+	#pragma omp parallel private(it, i, j, sum, sum1, var)
+	{
+		for (it = 0; it < itime; it++) {
+			/*
+			 * Iteration over elements.
+			 */
 
-		 #pragma omp ordered
-		 {
+			#pragma omp for
+			for (i = 0; i < n; i++) {
+				uplus[i] = u[i] + dt * (mu - u[i]);
+				sum = 0.0;
+				sum1 = 0.0;
+				/*
+				 * Iteration over neighbouring neurons.
+				 */
+				var = i*n;
+				for (j = 0; j < n; j++) {
+					sum1 += sigma[var + j] * u[j];
+				}
 
-			 for (i = 0; i < n; i++) {
-	 			uplus[i] = u[i] + dt * (mu - u[i]);
-	 			sum = 0.0;
-	 			sum1 = 0.0;
-	 			/*
-	 			 * Iteration over neighbouring neurons.
-	 			 */
-	 			var = i*n;
-	 			for (j = 0; j < n; j++) {
-	 				sum1 += sigma[var + j] * u[j];
-	 			}
+				sum = sum1 + u[i]*sigma_vector[i];
 
-	 			sum = sum1 + u[i]*sigma_vector[i];
-
-	 			uplus[i] += var2 * sum;
-	 		}
+				uplus[i] += var2 * sum;
+			}
 
 			/*
 			 * Update network elements and set u[i] = 0 if u[i] > uth
 			 */
 
-		 }
-
-			 //CEID 1a
-			 temp = uplus;
-			 uplus = u;
-			 u = temp;
+			#pragma omp master
+			{
+				//CEID 1a
+   			 temp = uplus;
+   			 uplus = u;
+   			 u = temp;
+			}
 
 			for (i = 0; i < n; i++) {
 				if (u[i] > uth) {
@@ -370,33 +370,35 @@ int main(int argc, char *argv[])
 			/*
 			 * Print out of results.
 			 */
-	#if !defined(ALL_RESULTS)
-			if (it % ntstep == 0) {
-	#endif
-				printf("Time is %ld\n", it);
+			 #pragma omp single
+			 {
+				 #if !defined(ALL_RESULTS)
+			 			if (it % ntstep == 0) {
+			 	#endif
+			 				printf("Time is %ld\n", it);
 
-				gettimeofday(&IO_start, NULL);
-				fprintf(output1, "%ld\t", it);
-				for (i = 0; i < n; i++) {
-					fprintf(output1, "%19.15f", u[i]);
-				}
-				fprintf(output1, "\n");
+			 				gettimeofday(&IO_start, NULL);
+			 				fprintf(output1, "%ld\t", it);
+			 				for (i = 0; i < n; i++) {
+			 					fprintf(output1, "%19.15f", u[i]);
+			 				}
+			 				fprintf(output1, "\n");
 
-				time = (double)it * dt;
-				fprintf(output2, "%ld\t", it);
-				for (i = 0; i < n; i++) {
-					omega[i] = 2.0 * M_PI * omega1[i] / (time - ttransient * dt);
-					fprintf(output2, "%19.15f", omega[i]);
-				}
-				fprintf(output2, "\n");
-				gettimeofday(&IO_end, NULL);
-				IO_usec += ((IO_end.tv_sec - IO_start.tv_sec) * 1000000.0 + (IO_end.tv_usec - IO_start.tv_usec));
-	#if !defined(ALL_RESULTS)
-			}
-	#endif
-		 }
-
-	//}
+			 				time = (double)it * dt;
+			 				fprintf(output2, "%ld\t", it);
+			 				for (i = 0; i < n; i++) {
+			 					omega[i] = 2.0 * M_PI * omega1[i] / (time - ttransient * dt);
+			 					fprintf(output2, "%19.15f", omega[i]);
+			 				}
+			 				fprintf(output2, "\n");
+			 				gettimeofday(&IO_end, NULL);
+			 				IO_usec += ((IO_end.tv_sec - IO_start.tv_sec) * 1000000.0 + (IO_end.tv_usec - IO_start.tv_usec));
+			 	#if !defined(ALL_RESULTS)
+			 			}
+			 	#endif
+			 }
+		}
+	}
 	gettimeofday(&global_end, NULL);
 	global_usec = ((global_end.tv_sec - global_start.tv_sec) * 1000000.0 + (global_end.tv_usec - global_start.tv_usec));
 
