@@ -322,13 +322,9 @@ int main(int argc, char *argv[])
 		/*
 		 * Iteration over elements.
 		 */
-
-
-		#pragma omp parallel default(none) private(i, j, sum, sum1, var) \
-		shared(uplus, u, dt, mu, var2, n, sigma, sigma_vector)
+		#pragma omp parallel private(i, j, sum, sum1, var) num_threads(8)
 		{
-
-			#pragma omp for schedule(runtime)
+			#pragma omp for
 			for (i = 0; i < n; i++) {
 				uplus[i] = u[i] + dt * (mu - u[i]);
 				sum = 0.0;
@@ -345,7 +341,6 @@ int main(int argc, char *argv[])
 
 				uplus[i] += var2 * sum;
 			}
-
 		}
 
 		/*
