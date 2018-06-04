@@ -22,16 +22,16 @@
 
 static struct option long_options[] =
 {
- {"dt",        required_argument, 0, 'a'},
- {"mu",        required_argument, 0, 'b'},
- {"uth",       required_argument, 0, 'c'},
- {"time",      required_argument, 0, 'd'},
- {"transient", required_argument, 0, 'e'},
- {"s_min",     required_argument, 0, 'f'},
- {"s_max",     required_argument, 0, 'g'},
- {"n",         required_argument, 0, 'n'},
- {"r",         required_argument, 0, 'r'},
- {0, 0, 0, 0}
+	{"dt",        required_argument, 0, 'a'},
+	{"mu",        required_argument, 0, 'b'},
+	{"uth",       required_argument, 0, 'c'},
+	{"time",      required_argument, 0, 'd'},
+	{"transient", required_argument, 0, 'e'},
+	{"s_min",     required_argument, 0, 'f'},
+	{"s_max",     required_argument, 0, 'g'},
+	{"n",         required_argument, 0, 'n'},
+	{"r",         required_argument, 0, 'r'},
+	{0, 0, 0, 0}
 };
 
 int main(int argc, char *argv[])
@@ -78,108 +78,108 @@ int main(int argc, char *argv[])
 
 		switch (c) {
 			case 'a':
-				dt = strtod(optarg, &end_ptr);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (dt <= 0.0) {
-					printf("Option \"%s\": \"dt\" must be larger than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			dt = strtod(optarg, &end_ptr);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (dt <= 0.0) {
+				printf("Option \"%s\": \"dt\" must be larger than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'b':
-				mu = strtod(optarg, &end_ptr);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (mu <= 0.0) {
-					printf("Option \"%s\": \"mu\" must be larger than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			mu = strtod(optarg, &end_ptr);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (mu <= 0.0) {
+				printf("Option \"%s\": \"mu\" must be larger than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'c':
-				uth = strtod(optarg, &end_ptr);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (uth <= 0.0) {
-					printf("Option \"%s\": \"uth\" must be larger than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			uth = strtod(optarg, &end_ptr);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (uth <= 0.0) {
+				printf("Option \"%s\": \"uth\" must be larger than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'd':
-				sim_time = strtol(optarg, &end_ptr, 10);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (sim_time < 1) {
-					printf("Option \"%s\": Total simulation time must be larger than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			sim_time = strtol(optarg, &end_ptr, 10);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (sim_time < 1) {
+				printf("Option \"%s\": Total simulation time must be larger than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'e':
-				ttransient = strtol(optarg, &end_ptr, 10);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (ttransient < 0) {
-					printf("Option \"%s\": \"ttransient\" must be larger or equal than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			ttransient = strtol(optarg, &end_ptr, 10);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (ttransient < 0) {
+				printf("Option \"%s\": \"ttransient\" must be larger or equal than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'f':
-				s_min = strtod(optarg, &end_ptr);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (s_min <= 0.0) {
-					printf("Option \"%s\": \"s_min\" must be larger than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			s_min = strtod(optarg, &end_ptr);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (s_min <= 0.0) {
+				printf("Option \"%s\": \"s_min\" must be larger than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'g':
-				s_max = strtod(optarg, &end_ptr);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (s_max <= 0.0) {
-					printf("Option \"%s\": \"s_max\" must be larger than zero.\n", long_options[option_index].name);
-					exit(1);
-				}
-				break;
+			s_max = strtod(optarg, &end_ptr);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (s_max <= 0.0) {
+				printf("Option \"%s\": \"s_max\" must be larger than zero.\n", long_options[option_index].name);
+				exit(1);
+			}
+			break;
 			case 'n':
-				n = strtol(optarg, &end_ptr, 10);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (n < MIN_NUM_OF_NEURONS) {
-					printf("Option \"%s\": Number of neurons must be at least %ld.\n", long_options[option_index].name, MIN_NUM_OF_NEURONS);
-					exit(1);
-				}
-				break;
+			n = strtol(optarg, &end_ptr, 10);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (n < MIN_NUM_OF_NEURONS) {
+				printf("Option \"%s\": Number of neurons must be at least %ld.\n", long_options[option_index].name, MIN_NUM_OF_NEURONS);
+				exit(1);
+			}
+			break;
 			case 'r':
-				r = strtol(optarg, &end_ptr, 10);
-				if (*end_ptr != '\0') {
-					printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
-					exit(1);
-				}
-				if (r < MIN_NUM_OF_NEIGHBORS) {
-					printf("Option \"%s\": Number of neighbors must be at least %ld.\n", long_options[option_index].name, MIN_NUM_OF_NEIGHBORS);
-					exit(1);
-				}
-				break;
+			r = strtol(optarg, &end_ptr, 10);
+			if (*end_ptr != '\0') {
+				printf("Option \"%s\": Invalid argument \"%s\".\n", long_options[option_index].name, optarg);
+				exit(1);
+			}
+			if (r < MIN_NUM_OF_NEIGHBORS) {
+				printf("Option \"%s\": Number of neighbors must be at least %ld.\n", long_options[option_index].name, MIN_NUM_OF_NEIGHBORS);
+				exit(1);
+			}
+			break;
 			case '?':
 			default:
-				exit(1);
-				break;
+			exit(1);
+			break;
 		}
 	}
 
@@ -262,17 +262,17 @@ int main(int argc, char *argv[])
 	}
 
 	/*
-	 * Initialize elements of array u[i] with random numbers.
-	 */
+	* Initialize elements of array u[i] with random numbers.
+	*/
 	for (i = 0; i < n; i++ ) {
 		u[i] = drand48();
 		printf("%ld\t%f\n", i, u[i]);
 	}
 
 	/*
-	 * Read connectivity matrix sigma[n][n] from file or
-	 * construct connectivity matrix.
-	 */
+	* Read connectivity matrix sigma[n][n] from file or
+	* construct connectivity matrix.
+	*/
 	for (i = 0; i < r; i++) {
 		for (j = 0; j < i + r + 1; j++) {
 			sigma[i * n + j] = s_min + (s_max - s_min) * drand48();
@@ -296,136 +296,136 @@ int main(int argc, char *argv[])
 			sigma[i * n + j] = s_min + (s_max - s_min) * drand48();
 		}
 	}
-#if 0
+	#if 0
 	for (i = 0; i < n; i++) {
-		for (j = 0; j < n; j++) {
-			printf("%4.1f", sigma[i * n + j]);
-		}
-		printf("\n");
-	}
+	for (j = 0; j < n; j++) {
+	printf("%4.1f", sigma[i * n + j]);
+}
+printf("\n");
+}
 #endif
+
+/*
+* Temporal iteration.
+*/
+//CEID 1b
+double var2 = dt / divide;
+
+sigma_vector = (double *)calloc(n, sizeof(double));
+for (i = 0; i < n; i++) {
+	sigma_vector[i] = 0.0;
+	for (j = 0; j < n; j++) {
+		sigma_vector[i] += (-sigma[i*n + j]);
+	}
+}
+
+double *mysum1;
+mysum1 = (double *)calloc(n, sizeof(double));
+
+gettimeofday(&global_start, NULL);
+for (it = 0; it < itime; it++) {
+	/*
+	* Iteration over elements.
+	*/
+	#pragma omp parallel private(i, sum) num_threads(8)
+	{
+		// int start, end, numOfThreads, numOfElements, id;
+		//
+		int numOfThreads = omp_get_num_threads();
+		int numOfElements = n / numOfThreads;
+		int id = omp_get_thread_num();
+
+		double* sigma_new = sigma + id * numOfElements * n;
+		//double* u_new = u + id * numOfElements;
+		double* mysum1_new = mysum1 + id * numOfElements;
+
+		int M;
+
+		if (id != numOfThreads - 1) {
+			M = n/numOfThreads;
+		}
+		else
+		{
+			M = n/numOfThreads + n%numOfThreads;
+		}
+
+
+		cblas_dgemv(CblasRowMajor, CblasNoTrans, M, n, 1, sigma_new, n, u, 1, 0, mysum1_new, 1);
+		//?gemv(                       'T',      M, N, a,   A,   M,  X, 1, b,  Y,  1)
+
+
+		#pragma omp for
+		for (i = 0; i < n; i++) {
+			uplus[i] = u[i] + dt * (mu - u[i]);
+			sum = 0.0;
+			/*
+			* Iteration over neighbouring neurons.
+			*/
+
+			sum = mysum1[i] + u[i]*sigma_vector[i];
+
+			uplus[i] += var2 * sum;
+		}
+	}
 
 	/*
-	 * Temporal iteration.
-	 */
-	 //CEID 1b
-	 double var2 = dt / divide;
+	* Update network elements and set u[i] = 0 if u[i] > uth
+	*/
 
-	 sigma_vector = (double *)calloc(n, sizeof(double));
-	 for (i = 0; i < n; i++) {
-		 sigma_vector[i] = 0.0;
- 		for (j = 0; j < n; j++) {
- 			sigma_vector[i] += (-sigma[i*n + j]);
- 		}
- 	}
+	//CEID 1a
+	temp = uplus;
+	uplus = u;
+	u = temp;
 
-	double *mysum1;
-	mysum1 = (double *)calloc(n, sizeof(double));
-
-	gettimeofday(&global_start, NULL);
-	for (it = 0; it < itime; it++) {
-		/*
-		 * Iteration over elements.
-		 */
-		#pragma omp parallel private(i, sum) num_threads(8)
-		{
-			// int start, end, numOfThreads, numOfElements, id;
-            //
-			int numOfThreads = omp_get_num_threads();
-			int numOfElements = n / numOfThreads;
-			int id = omp_get_thread_num();
-
-			double* sigma_new = sigma + id * numOfElements * n;
-			//double* u_new = u + id * numOfElements;
-			double* mysum1_new = mysum1 + id * numOfElements;
-
-			int M;
-
-			if (id != numOfThreads - 1) {
-				M = n/numOfThreads;
-			}
-			else
-			{
-				M = n/numOfThreads + n%numOfThreads;
-			}
-
-
-			cblas_dgemv(CblasRowMajor, CblasNoTrans, M, n, 1, sigma_new, n, u, 1, 0, mysum1_new, 1);
-			//?gemv(                       'T',      M, N, a,   A,   M,  X, 1, b,  Y,  1)
-
-
-			#pragma omp for
-			for (i = 0; i < n; i++) {
-				uplus[i] = u[i] + dt * (mu - u[i]);
-				sum = 0.0;
-				/*
-				 * Iteration over neighbouring neurons.
-				 */
-
-				sum = mysum1[i] + u[i]*sigma_vector[i];
-
-				uplus[i] += var2 * sum;
+	for (i = 0; i < n; i++) {
+		if (u[i] > uth) {
+			u[i] = 0.0;
+			/*
+			* Calculate omega's.
+			*/
+			if (it >= ttransient) {
+				omega1[i] += 1.0;
 			}
 		}
-
-		/*
-		 * Update network elements and set u[i] = 0 if u[i] > uth
-		 */
-
-		 //CEID 1a
-		 temp = uplus;
-		 uplus = u;
-		 u = temp;
-
-		for (i = 0; i < n; i++) {
-			if (u[i] > uth) {
-				u[i] = 0.0;
-				/*
-				 * Calculate omega's.
-				 */
-				if (it >= ttransient) {
-					omega1[i] += 1.0;
-				}
-			}
-		}
-
-		/*
-		 * Print out of results.
-		 */
-#if !defined(ALL_RESULTS)
-		if (it % ntstep == 0) {
-#endif
-			printf("Time is %ld\n", it);
-
-			gettimeofday(&IO_start, NULL);
-			fprintf(output1, "%ld\t", it);
-			for (i = 0; i < n; i++) {
-				fprintf(output1, "%19.15f", u[i]);
-			}
-			fprintf(output1, "\n");
-
-			time = (double)it * dt;
-			fprintf(output2, "%ld\t", it);
-			for (i = 0; i < n; i++) {
-				omega[i] = 2.0 * M_PI * omega1[i] / (time - ttransient * dt);
-				fprintf(output2, "%19.15f", omega[i]);
-			}
-			fprintf(output2, "\n");
-			gettimeofday(&IO_end, NULL);
-			IO_usec += ((IO_end.tv_sec - IO_start.tv_sec) * 1000000.0 + (IO_end.tv_usec - IO_start.tv_usec));
-#if !defined(ALL_RESULTS)
-		}
-#endif
 	}
-	gettimeofday(&global_end, NULL);
-	global_usec = ((global_end.tv_sec - global_start.tv_sec) * 1000000.0 + (global_end.tv_usec - global_start.tv_usec));
 
-	printf("Time for calculations = %13.6f sec\n", (global_usec - IO_usec) / 1000000.0);
-	printf("Time for I/O          = %13.6f sec\n", IO_usec / 1000000.0);
-	printf("Total execution time  = %13.6f sec\n", global_usec / 1000000.0);
+	/*
+	* Print out of results.
+	*/
+	#if !defined(ALL_RESULTS)
+	if (it % ntstep == 0) {
+		#endif
+		printf("Time is %ld\n", it);
 
-	fclose(output1);
-	fclose(output2);
+		gettimeofday(&IO_start, NULL);
+		fprintf(output1, "%ld\t", it);
+		for (i = 0; i < n; i++) {
+			fprintf(output1, "%19.15f", u[i]);
+		}
+		fprintf(output1, "\n");
 
-	return 0;
+		time = (double)it * dt;
+		fprintf(output2, "%ld\t", it);
+		for (i = 0; i < n; i++) {
+			omega[i] = 2.0 * M_PI * omega1[i] / (time - ttransient * dt);
+			fprintf(output2, "%19.15f", omega[i]);
+		}
+		fprintf(output2, "\n");
+		gettimeofday(&IO_end, NULL);
+		IO_usec += ((IO_end.tv_sec - IO_start.tv_sec) * 1000000.0 + (IO_end.tv_usec - IO_start.tv_usec));
+		#if !defined(ALL_RESULTS)
+	}
+	#endif
+}
+gettimeofday(&global_end, NULL);
+global_usec = ((global_end.tv_sec - global_start.tv_sec) * 1000000.0 + (global_end.tv_usec - global_start.tv_usec));
+
+printf("Time for calculations = %13.6f sec\n", (global_usec - IO_usec) / 1000000.0);
+printf("Time for I/O          = %13.6f sec\n", IO_usec / 1000000.0);
+printf("Total execution time  = %13.6f sec\n", global_usec / 1000000.0);
+
+fclose(output1);
+fclose(output2);
+
+return 0;
 }
