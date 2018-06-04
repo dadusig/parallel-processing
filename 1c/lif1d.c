@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 {
 	FILE		*output1, *output2;
 	long		n, r;
-	long		i, j;
+	long		i, j, var;
 	long		it;
 	double		divide;
 	double		dt;
@@ -313,8 +313,9 @@ double var2 = dt / divide;
 sigma_vector = (double *)calloc(n, sizeof(double));
 for (i = 0; i < n; i++) {
 	sigma_vector[i] = 0.0;
+	var = i*n;
 	for (j = 0; j < n; j++) {
-		sigma_vector[i] += (-sigma[i*n + j]);
+		sigma_vector[i] += (-sigma[var + j]);
 	}
 }
 
@@ -392,6 +393,9 @@ printf("Total execution time  = %13.6f sec\n", global_usec / 1000000.0);
 
 fclose(output1);
 fclose(output2);
+
+free(u);     free(uplus);     free(sigma);
+free(omega); free(omega1);    free(sigma_vector);
 
 return 0;
 }

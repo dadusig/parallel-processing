@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
 	FILE		*output1, *output2;
 	long		n, r;
-	long		i, j;
+	long		i, j, var;
 	long		it;
 	double		divide;
 	double		dt;
@@ -317,8 +317,9 @@ for (it = 0; it < itime; it++) {
 		/*
 		* Iteration over neighbouring neurons.
 		*/
+		var = i*n;
 		for (j = 0; j < n; j++) {
-			sum += sigma[i * n + j] * (u[j] - u[i]);
+			sum += sigma[var + j] * (u[j] - u[i]);
 		}
 		uplus[i] += dt * sum / divide;
 
@@ -378,6 +379,9 @@ printf("Total execution time  = %13.6f sec\n", global_usec / 1000000.0);
 
 fclose(output1);
 fclose(output2);
+
+free(u);     free(uplus);     free(sigma);
+free(omega); free(omega1);
 
 return 0;
 }

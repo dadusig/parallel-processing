@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
 	FILE		*output1, *output2;
 	long		n, r;
-	long		i, j;
+	long		i, j, var;
 	long		it;
 	double		divide;
 	double		dt;
@@ -312,13 +312,14 @@ double var2 = dt / divide;
 sigma_vector = (double *)calloc(n, sizeof(double));
 for (i = 0; i < n; i++) {
 	sigma_vector[i] = 0.0;
+	var = i*n;
 	for (j = 0; j < n; j++) {
-		sigma_vector[i] += (-sigma[i*n + j]);
+		sigma_vector[i] += (-sigma[var + j]);
 	}
 }
 
 gettimeofday(&global_start, NULL);
-#pragma omp parallel private(it, i, j, sum, sum1)
+#pragma omp parallel private(it, i, j, sum, sum1, var)
 {
 	for (it = 0; it < itime; it++) {
 		/*
@@ -333,8 +334,9 @@ gettimeofday(&global_start, NULL);
 			/*
 			* Iteration over neighbouring neurons.
 			*/
+			var = i*n;
 			for (j = 0; j < n; j++) {
-				sum1 += sigma[i*n + j] * u[j];
+				sum1 += sigma[var + j] * u[j];
 			}
 
 			sum = sum1 + u[i]*sigma_vector[i];
@@ -404,6 +406,9 @@ printf("Total execution time  = %13.6f sec\n", global_usec / 1000000.0);
 
 fclose(output1);
 fclose(output2);
+
+free(u);     free(uplus);     free(sigma);
+free(omega); free(omega1);    free(sigma_vector);
 
 return 0;
 }
