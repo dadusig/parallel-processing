@@ -321,20 +321,9 @@ for (it = 0; it < itime; it++) {
 			sum += sigma[i * n + j] * (u[j] - u[i]);
 		}
 		uplus[i] += dt * sum / divide;
-	}
 
-	/*
-	* Update network elements and set u[i] = 0 if u[i] > uth
-	*/
-
-	//CEID 1a
-	temp = uplus;
-	uplus = u;
-	u = temp;
-
-	for (i = 0; i < n; i++) {
-		if (u[i] > uth) {
-			u[i] = 0.0;
+		if (uplus[i] > uth) {
+			uplus[i] = 0.0;
 			/*
 			* Calculate omega's.
 			*/
@@ -343,6 +332,14 @@ for (it = 0; it < itime; it++) {
 			}
 		}
 	}
+
+	/*
+	* swap pointer uplus->u
+	*/
+	temp = uplus;
+	uplus = u;
+	u = temp;
+
 
 	/*
 	* Print out of results.

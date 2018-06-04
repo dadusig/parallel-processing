@@ -332,34 +332,13 @@ for (it = 0; it < itime; it++) {
 	for (i = 0; i < n; i++) {
 		uplus[i] = u[i] + dt * (mu - u[i]);
 		sum = 0.0;
-		//sum1 = 0.0;
-		/*
-		* Iteration over neighbouring neurons.
-		*/
-		// var = i*n;
-		// for (j = 0; j < n; j++) {
-		// 	sum1 += sigma[var + j] * u[j];
-		// }
-
 
 		sum = mysum1[i] + u[i]*sigma_vector[i];
 
 		uplus[i] += var2 * sum;
-	}
 
-	/*
-	* Update network elements and set u[i] = 0 if u[i] > uth
-	*/
-
-	//CEID 1a
-	temp = uplus;
-	uplus = u;
-	u = temp;
-
-	for (i = 0; i < n; i++) {
-		//u[i] = uplus[i];
-		if (u[i] > uth) {
-			u[i] = 0.0;
+		if (uplus[i] > uth) {
+			uplus[i] = 0.0;
 			/*
 			* Calculate omega's.
 			*/
@@ -368,6 +347,13 @@ for (it = 0; it < itime; it++) {
 			}
 		}
 	}
+
+	/*
+	* swap pointer uplus->u
+	*/
+	temp = uplus;
+	uplus = u;
+	u = temp;
 
 	/*
 	* Print out of results.

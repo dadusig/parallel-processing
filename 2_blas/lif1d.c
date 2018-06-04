@@ -365,29 +365,25 @@ for (it = 0; it < itime; it++) {
 			sum = mysum1[i] + u[i]*sigma_vector[i];
 
 			uplus[i] += var2 * sum;
+
+			if (uplus[i] > uth) {
+				uplus[i] = 0.0;
+				/*
+				* Calculate omega's.
+				*/
+				if (it >= ttransient) {
+					omega1[i] += 1.0;
+				}
+			}
 		}
 	}
 
 	/*
-	* Update network elements and set u[i] = 0 if u[i] > uth
+	* swap pointer uplus->u
 	*/
-
-	//CEID 1a
 	temp = uplus;
 	uplus = u;
 	u = temp;
-
-	for (i = 0; i < n; i++) {
-		if (u[i] > uth) {
-			u[i] = 0.0;
-			/*
-			* Calculate omega's.
-			*/
-			if (it >= ttransient) {
-				omega1[i] += 1.0;
-			}
-		}
-	}
 
 	/*
 	* Print out of results.

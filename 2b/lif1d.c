@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
 	FILE		*output1, *output2;
 	long		n, r;
-	long		i, j, var;
+	long		i, j;
 	long		it;
 	double		divide;
 	double		dt;
@@ -322,7 +322,7 @@ for (it = 0; it < itime; it++) {
 	/*
 	* Iteration over elements.
 	*/
-	#pragma omp parallel private(i, j, sum, sum1, var) num_threads(8)
+	#pragma omp parallel private(i, j, sum, sum1) num_threads(8)
 	{
 		#pragma omp for
 		for (i = 0; i < n; i++) {
@@ -332,37 +332,32 @@ for (it = 0; it < itime; it++) {
 			/*
 			* Iteration over neighbouring neurons.
 			*/
-			var = i*n;
 			for (j = 0; j < n; j++) {
-				sum1 += sigma[var + j] * u[j];
+				sum1 += sigma[i*n + j] * u[j];
 			}
 
 			sum = sum1 + u[i]*sigma_vector[i];
 
 			uplus[i] += var2 * sum;
+
+			if (uplus[i] > uth) {
+				uplus[i] = 0.0;
+				/*
+				* Calculate omega's.
+				*/
+				if (it >= ttransient) {
+					omega1[i] += 1.0;
+				}
+			}
 		}
 	}
 
 	/*
-	* Update network elements and set u[i] = 0 if u[i] > uth
+	* swap pointer uplus->u
 	*/
-
-	//CEID 1a
 	temp = uplus;
 	uplus = u;
 	u = temp;
-
-	for (i = 0; i < n; i++) {
-		if (u[i] > uth) {
-			u[i] = 0.0;
-			/*
-			* Calculate omega's.
-			*/
-			if (it >= ttransient) {
-				omega1[i] += 1.0;
-			}
-		}
-	}
 
 	/*
 	* Print out of results.

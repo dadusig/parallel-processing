@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
 	FILE		*output1, *output2;
 	long		n, r;
-	long		i, j, var;
+	long		i, j;
 	long		it;
 	double		divide;
 	double		dt;
@@ -318,7 +318,7 @@ for (i = 0; i < n; i++) {
 }
 
 gettimeofday(&global_start, NULL);
-#pragma omp parallel private(it, i, j, sum, sum1, var)
+#pragma omp parallel private(it, i, j, sum, sum1)
 {
 	for (it = 0; it < itime; it++) {
 		/*
@@ -333,31 +333,16 @@ gettimeofday(&global_start, NULL);
 			/*
 			* Iteration over neighbouring neurons.
 			*/
-			var = i*n;
 			for (j = 0; j < n; j++) {
-				sum1 += sigma[var + j] * u[j];
+				sum1 += sigma[i*n + j] * u[j];
 			}
 
 			sum = sum1 + u[i]*sigma_vector[i];
 
 			uplus[i] += var2 * sum;
-		}
 
-		/*
-		* Update network elements and set u[i] = 0 if u[i] > uth
-		*/
-
-		#pragma omp master
-		{
-			//CEID 1a
-			temp = uplus;
-			uplus = u;
-			u = temp;
-		}
-
-		for (i = 0; i < n; i++) {
-			if (u[i] > uth) {
-				u[i] = 0.0;
+			if (uplus[i] > uth) {
+				uplus[i] = 0.0;
 				/*
 				* Calculate omega's.
 				*/
@@ -366,6 +351,17 @@ gettimeofday(&global_start, NULL);
 				}
 			}
 		}
+
+		/*
+		* swap pointer uplus->u
+		*/
+		#pragma omp master
+		{
+			temp = uplus;
+			uplus = u;
+			u = temp;
+		}
+
 
 		/*
 		* Print out of results.
